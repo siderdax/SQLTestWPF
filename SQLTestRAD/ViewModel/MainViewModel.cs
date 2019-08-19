@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using SQLTestRAD.Model;
 
-using sqlDataManager;
+using SqlDataManager;
 
 namespace SQLTestRAD.ViewModel
 {
