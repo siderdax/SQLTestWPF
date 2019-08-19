@@ -130,7 +130,7 @@ namespace SQLTestRAD.ViewModel
         {
             WelcomeTitle = "Running...";
             Random r = new Random();
-            databaseConnection dc = new databaseConnection(SqlDataAddress, SqlDataPort, SqlInitialCatalog, SqlUserId, SqlPassword);
+            DatabaseConnection dc = new DatabaseConnection(SqlDataAddress, SqlDataPort, SqlInitialCatalog, SqlUserId, SqlPassword);
             // int ret = -1;
             DataTable dbData;
 
