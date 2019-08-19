@@ -9,7 +9,13 @@ namespace SQLTestRAD.Model
             private set;
         }
 
-        public string DataSource
+        public string DataAddress
+        {
+            get;
+            private set;
+        }
+
+        public string DataPort
         {
             get;
             private set;
@@ -36,7 +42,8 @@ namespace SQLTestRAD.Model
         public DataItem(string title, Hashtable defaultValue)
         {
             Title = title;
-            DataSource = defaultValue["datasource"] as string;
+            DataAddress = defaultValue["dataaddress"] as string;
+            DataPort = defaultValue["dataport"] as string;
             InitialCatalog = defaultValue["initialcatalog"] as string;
             UserId = defaultValue["userid"] as string;
             Password = defaultValue["password"] as string;

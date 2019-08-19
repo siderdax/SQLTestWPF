@@ -9,9 +9,10 @@ namespace SQLTestRAD.Model
         {
             // Use this to connect to the actual data service
             Hashtable defaultData = new Hashtable();
-            defaultData.Add("datasource", "127.0.0.1");
-            defaultData.Add("initialcatalog", "8080");
-            defaultData.Add("userid", "");
+            defaultData.Add("dataaddress", "127.0.0.1");
+            defaultData.Add("dataport", "8080");
+            defaultData.Add("initialcatalog", "TEST");
+            defaultData.Add("userid", "admin");
             defaultData.Add("password", "");
             var item = new DataItem("SQL Test", defaultData);
             callback(item, null);

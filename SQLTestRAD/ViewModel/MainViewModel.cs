@@ -1,7 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System.Threading;
+using System.Data;
+using System;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using SQLTestRAD.Model;
+
+using sqlDataManager;
 
 namespace SQLTestRAD.ViewModel
 {
@@ -21,7 +26,8 @@ namespace SQLTestRAD.ViewModel
         public const string WelcomeTitlePropertyName = "WelcomeTitle";
 
         private string _welcomeTitle = string.Empty;
-        private string _sqlDataSource = string.Empty;
+        private string _sqlDataAddress = string.Empty;
+        private string _sqlDataPort = string.Empty;
         private string _sqlInitialCatalog = string.Empty;
         private string _sqlUserId = string.Empty;
         private string _sqlPassword = string.Empty;
@@ -43,15 +49,27 @@ namespace SQLTestRAD.ViewModel
             }
         }
 
-        public string SqlDataSource
+        public string SqlDataAddress
         {
             get
             {
-                return _sqlDataSource;
+                return _sqlDataAddress;
             }
             set
             {
-                Set(ref _sqlDataSource, value);
+                Set(ref _sqlDataAddress, value);
+            }
+        }
+
+        public string SqlDataPort
+        {
+            get
+            {
+                return _sqlDataPort;
+            }
+            set
+            {
+                Set(ref _sqlDataPort, value);
             }
         }
 
@@ -110,7 +128,40 @@ namespace SQLTestRAD.ViewModel
 
         public void RunQueryMethod()
         {
-            WelcomeTitle = "Click";
+            WelcomeTitle = "Running...";
+            Random r = new Random();
+            databaseConnection dc = new databaseConnection(SqlDataAddress, SqlDataPort, SqlInitialCatalog, SqlUserId, SqlPassword);
+            // int ret = -1;
+            DataTable dbData;
+
+            // ret = dc.RunNonQuery(strQuery);
+            dbData = dc.RunQuery(SqlQuery);
+            
+            // if(ret < 0) {
+            //     WelcomeTitle = "Query Error";
+            // } else {
+            //     WelcomeTitle = ret + " rows Changed.";
+            // }
+
+            
+
+            if(dbData.Columns.Count > 0)
+            {
+                if(dbData.Columns[0].ColumnName.Equals("error"))
+                {
+                    WelcomeTitle = "Error: ";
+                    foreach(DataRow row in dbData.Rows)
+                    {
+                        WelcomeTitle += row["error"];
+                    }
+                } else
+                {
+                    WelcomeTitle = DataTableToString(dbData);
+                }
+            } else
+            {
+                WelcomeTitle = "Query done.";
+            }
         }
 
         /// <summary>
@@ -129,13 +180,40 @@ namespace SQLTestRAD.ViewModel
                     }
 
                     WelcomeTitle = item.Title;
-                    SqlDataSource = item.DataSource;
+                    SqlDataAddress = item.DataAddress;
+                    SqlDataPort = item.DataPort;
                     SqlInitialCatalog = item.InitialCatalog;
                     SqlUserId = item.UserId;
                     SqlPassword = item.Password;
                 });
 
             RunQueryCommand = new RelayCommand(RunQueryMethod);
+        }
+
+        private string DataTableToString(DataTable table)
+        {
+            string str = "";
+
+            foreach (DataColumn col in table.Columns)
+            {
+                str += String.Format("{0,-14}", col.ColumnName);
+            }
+            str += "\r\n";
+
+            foreach (DataRow row in table.Rows)
+            {
+                foreach (DataColumn col in table.Columns)
+                {
+                    if (col.DataType.Equals(typeof(DateTime)))
+                        str += String.Format("{0,-14:d}", row[col]);
+                    else
+                        str += String.Format("{0,-14}", row[col]);
+                }
+                str += "\r\n";
+            }
+            str += "\r\n";
+
+            return str;
         }
 
         ////public override void Cleanup()

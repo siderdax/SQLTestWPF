@@ -10,8 +10,9 @@ namespace SQLTestRAD.Design
         {
             // Use this to create design time data
             Hashtable defaultData = new Hashtable();
-            defaultData.Add("datasource", "127.0.0.1");
-            defaultData.Add("initialcatalog", "8080");
+            defaultData.Add("dataaddress", "127.0.0.1");
+            defaultData.Add("dataport", "1433");
+            defaultData.Add("initialcatalog", "TEST_DB");
             defaultData.Add("userid", "id");
             defaultData.Add("password", "password");
             var item = new DataItem("SQL test", defaultData);
